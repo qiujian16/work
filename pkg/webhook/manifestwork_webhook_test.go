@@ -20,7 +20,7 @@ var manifestWorkSchema = metav1.GroupVersionResource{
 	Resource: "manifestworks",
 }
 
-func TestManagedClusterValidate(t *testing.T) {
+func TestManifestWorkValidate(t *testing.T) {
 	manifestLimit = 3
 	cases := []struct {
 		name             string

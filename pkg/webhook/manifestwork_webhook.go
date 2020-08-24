@@ -56,16 +56,15 @@ func (a *ManifestWorkAdmissionHook) Validate(admissionSpec *admissionv1beta1.Adm
 	}
 }
 
-// Initialize is called by generic-admission-server on startup to setup initialization that managedclusters webhook needs.
+// Initialize is called by generic-admission-server on startup to setup initialization that manifestwork webhook needs.
 func (a *ManifestWorkAdmissionHook) Initialize(kubeClientConfig *rest.Config, stopCh <-chan struct{}) error {
 	return nil
 }
 
-// validateCreateRequest validates create managed cluster operation
+// validateRequest validates creating/updating manifestwork operation
 func (a *ManifestWorkAdmissionHook) validateRequest(request *admissionv1beta1.AdmissionRequest) *admissionv1beta1.AdmissionResponse {
 	status := &admissionv1beta1.AdmissionResponse{}
 
-	// validate ManagedCluster object firstly
 	err := a.validateManifestWorkObj(request.Object)
 	if err != nil {
 		status.Allowed = false
@@ -80,7 +79,7 @@ func (a *ManifestWorkAdmissionHook) validateRequest(request *admissionv1beta1.Ad
 	return status
 }
 
-// validateManagedClusterObj validates the fileds of ManagedCluster object
+// validateManifestWorkObj validates the fileds of manifestwork object
 func (a *ManifestWorkAdmissionHook) validateManifestWorkObj(requestObj runtime.RawExtension) error {
 	work := &workv1.ManifestWork{}
 	if err := json.Unmarshal(requestObj.Raw, work); err != nil {
