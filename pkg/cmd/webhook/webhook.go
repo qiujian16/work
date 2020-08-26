@@ -10,7 +10,11 @@ import (
 )
 
 func NewAdmissionHook() *cobra.Command {
-	o := admissionserver.NewAdmissionServerOptions(os.Stdout, os.Stderr, &webhook.ManifestWorkAdmissionHook{})
+	o := admissionserver.NewAdmissionServerOptions(
+		os.Stdout, os.Stderr, 
+		&webhook.ManifestWorkAdmissionHook{},
+		&webhook.AppliedManifestWorkAdmissionHook{},
+	)
 
 	cmd := &cobra.Command{
 		Use:   "webhook",
