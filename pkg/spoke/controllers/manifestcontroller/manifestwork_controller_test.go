@@ -2,7 +2,6 @@ package manifestcontroller
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"testing"
 	"time"
@@ -646,7 +645,7 @@ func TestBuildManifestResourceMeta(t *testing.T) {
 			if c.manifestObject != nil {
 				manifest.Object = c.manifestObject
 			}
-			actual, _, err := buildManifestResourceMeta(0, manifest, c.restMapper)
+			actual, _, _, err := buildManifestResourceMeta(0, manifest, c.restMapper)
 			if err != nil {
 				t.Errorf("Should be success with no err: %v", err)
 			}
@@ -989,9 +988,8 @@ func TestApplyUnstructred(t *testing.T) {
 				withUnstructuredObject(c.existingObject...)
 			syncContext := spoketesting.NewFakeSyncContext(t, workKey)
 
-			data, _ := json.Marshal(c.required)
 			_, _, err := controller.controller.applyUnstructured(
-				context.TODO(), data, c.owner, c.gvr, syncContext.Recorder())
+				context.TODO(), c.required, c.owner, c.gvr, syncContext.Recorder())
 
 			if err != nil {
 				t.Errorf("expect no error, but got %v", err)

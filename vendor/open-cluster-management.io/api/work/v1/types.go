@@ -79,9 +79,38 @@ type ManifestConfigOption struct {
 	ResourceIdentifier ResourceIdentifier `json:"resourceIdentifier"`
 
 	// FeedbackRules defines what resource status field should be returned.
+	// +optional
+	FeedbackRules []FeedbackRule `json:"feedbackRules,omitempty"`
+
+	// UpdateStrategy defines the strategy to update this manifest
+	// optional
+	UpdateStrategy UpdateStrategy `json:"updateStrategy,omitempty"`
+}
+
+// UpdateStrategy defines the strategy to update this manifest
+type UpdateStrategy struct {
+	// type defines the strategy to update this manifest, default value is Update.
+	// Update type means to update resource by an update call.
+	// None type means do not update resource based on current manifest.
+	// ServerSideApply type means to update resource using server side apply as fieldManager of work-controller.
+	// If there is conflict, the related Applied condition of manifest will be in the status of False with the
+	// reason of ApplyConflict.
+	// +kubebuilder:default=Update
+	// +kubebuilder:validation:Enum=Update;None;ServerSideApply
 	// +kubebuilder:validation:Required
 	// +required
-	FeedbackRules []FeedbackRule `json:"feedbackRules"`
+	Type string `json:"type"`
+
+	// serverSideApply defines the configuration for server side apply. It is honored only when
+	// type of updateStrategy is ServerSideApply
+	// +optional
+	ServerSideApply *ServerSideApplyConfig `json:"serverSideApply,omitempty"`
+}
+
+type ServerSideApplyConfig struct {
+	// Force represents to force apply the manifest.
+	// +optional
+	Force bool `json:"force"`
 }
 
 type FeedbackRule struct {
